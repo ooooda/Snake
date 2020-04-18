@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>to-do_to-do_to-do-yo-do-to-do-todoooo-tarararam</title>
+    <style>
+        #field {
+            width: 804px;
+            height: 595px;
+            border: 10px solid blue;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+
+        #square {
+            width: 10px;
+            height: 10px;
+            background-color: darkblue;
+            position: absolute;
+            left: 1px;
+            top: 1px;
+        }
+
+        #eat {
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            position: absolute;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        #score {
+            position: absolute;
+            left: 850px;
+        }
+
+        #click {
+            position: absolute;
+            left: 850px;
+            top: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="field">
+    <h1 align="center">GAME IS OVER</h1>
+    <div id="eat"></div>
+    <div id="square"></div>
+</div>
+
+<input type="text" id="score" value="0"/>
+<input type="button" id="click" onclick="reset()" value="restart the game"/>
+
+<script>
+    var x = 1, y = 1;
+    var key = "ArrowRight";
+    var snake = document.getElementById("square");
+
+    function reset() {
+        counter = 0;
+        x = 1;
+        y = 1;
+        key = "ArrowRight";
+        fieldSNAKE.style.backgroundColor = "white";
+        snake.style.backgroundColor = "darkblue";
+        apple.style.backgroundColor = "green";
+
+        fieldSNAKE.children.slice(0,3);
+    }
+
+    document.body.onkeydown = parseKey;
+
+    function parseKey(e) {
+        key = e.key;
+        console.log(key);
+    }
+
+    function game() {
+        for (i = fieldSNAKE.children.length-1; i >= 3; i -= 1) {
+            fieldSNAKE.children[i].style.left = fieldSNAKE.children[i-1].style.left;
+            fieldSNAKE.children[i].style.top = fieldSNAKE.children[i-1].style.top;
+        }
+        if (key === "ArrowRight") x += 11;
+        if (key === "ArrowLeft") x -= 11;
+        if (key === "ArrowUp") y -= 11;
+        if (key === "ArrowDown") y += 11;
+        snake.style.left = x + "px";
+        snake.style.top = y + "px";
+        new_one();
+        if (x < 1 || x > 804 || y < 1 || y > 595) gameover();
+
+
+    }
+
+    var fieldSNAKE = document.getElementById("field");
+
+    function gameover() {
+        fieldSNAKE.style.backgroundColor = "black";
+        snake.style.backgroundColor = "darkblue";
+        apple.style.backgroundColor = "black";
+    }
+
+    var X = 1;
+    var Y = 1;
+
+    function a(min, max) {
+        X = min + Math.floor((max - min) * Math.random());
+        while (X * 11 + 1 < 1 || X * 11 + 1 > 804) X = min + Math.floor((max - min) * Math.random());
+        return X * 11 + 1;
+    }
+
+    function b(min, max) {
+        Y = min + Math.floor((max - min) * Math.random());
+        while (Y * 11 + 1 < 1 || Y * 11 + 1 > 596) Y = min + Math.floor((max - min) * Math.random());
+        return Y * 11 + 1;
+    }
+
+    var apple = document.getElementById("eat");
+    var counter = 0;
+    var text = document.getElementById("score");
+
+    function food() {
+        apple.style.left = a(-1000, 1000) + "px";
+        apple.style.top = b(-1000, 1000) + "px";
+    }
+
+    function new_one() {
+        if (x === X * 11 + 1 && y === Y * 11 + 1) {
+            grow();
+            food();
+            counter += 1;
+        }
+        text.value = "your score is " + counter;
+    }
+
+    function grow() {
+        var tail = document.createElement('div');
+        tail.setAttribute('id', "tail");
+        tail.style.width = "10px";
+        tail.style.height = "10px";
+        tail.style.top = apple.style.top;
+        tail.style.left = apple.style.left;
+        tail.style.backgroundColor = "darkblue";
+        tail.style.position = "absolute";
+        fieldSNAKE.appendChild(tail);
+    }
+
+    food();
+    setInterval("game()", 100);
+
+</script>
+</body>
+</html>
