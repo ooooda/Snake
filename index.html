@@ -16,7 +16,7 @@
         #square {
             width: 10px;
             height: 10px;
-            background-color: darkblue;
+            background-color: #02b398;
             position: absolute;
             left: 1px;
             top: 1px;
@@ -53,7 +53,7 @@
     <div id="square"></div>
 </div>
 
-<input type="text" id="score" value="0"/>
+<input type="text" readonly id="score" placeholder="0"/>
 <input type="button" id="click" onclick="reset()" value="restart the game"/>
 
 <script>
@@ -66,43 +66,56 @@
         x = 1;
         y = 1;
         key = "ArrowRight";
+        food();
         fieldSNAKE.style.backgroundColor = "white";
         snake.style.backgroundColor = "darkblue";
         apple.style.backgroundColor = "green";
-
-        fieldSNAKE.children.slice(0,3);
+        while (fieldSNAKE.children.length > 3) {
+            fieldSNAKE.removeChild(fieldSNAKE.lastChild);
+        }
     }
 
     document.body.onkeydown = parseKey;
 
     function parseKey(e) {
+        if (score >= 1 &&
+            (e.key === "ArrowRight" && key === "ArrowLeft") ||
+            (e.key === "ArrowLeft" && key === "ArrowRight") ||
+            (e.key === "ArrowDown" && key === "ArrowUp") ||
+            (e.key === "ArrowUp" && key === "ArrowDown"))
+            return;
         key = e.key;
         console.log(key);
     }
 
-    function game() {
-        for (i = fieldSNAKE.children.length-1; i >= 3; i -= 1) {
-            fieldSNAKE.children[i].style.left = fieldSNAKE.children[i-1].style.left;
-            fieldSNAKE.children[i].style.top = fieldSNAKE.children[i-1].style.top;
-        }
+    function movement() {
         if (key === "ArrowRight") x += 11;
         if (key === "ArrowLeft") x -= 11;
         if (key === "ArrowUp") y -= 11;
         if (key === "ArrowDown") y += 11;
         snake.style.left = x + "px";
         snake.style.top = y + "px";
+    }
+
+    function game() {
+        for (i = fieldSNAKE.children.length - 1; i >= 3; i -= 1) {
+            fieldSNAKE.children[i].style.left = fieldSNAKE.children[i - 1].style.left;
+            fieldSNAKE.children[i].style.top = fieldSNAKE.children[i - 1].style.top;
+        }
+
+        movement();
+
+        if (x < 1 || x > 794 || y < 1 || y > 575) gameover();
+
         new_one();
-        if (x < 1 || x > 804 || y < 1 || y > 595) gameover();
-
-
     }
 
     var fieldSNAKE = document.getElementById("field");
 
     function gameover() {
         fieldSNAKE.style.backgroundColor = "black";
-        snake.style.backgroundColor = "darkblue";
         apple.style.backgroundColor = "black";
+        key = "";
     }
 
     var X = 1;
@@ -110,13 +123,13 @@
 
     function a(min, max) {
         X = min + Math.floor((max - min) * Math.random());
-        while (X * 11 + 1 < 1 || X * 11 + 1 > 804) X = min + Math.floor((max - min) * Math.random());
+        while (X * 11 + 1 < 11 || X * 11 + 1 > 789) X = min + Math.floor((max - min) * Math.random());
         return X * 11 + 1;
     }
 
     function b(min, max) {
         Y = min + Math.floor((max - min) * Math.random());
-        while (Y * 11 + 1 < 1 || Y * 11 + 1 > 596) Y = min + Math.floor((max - min) * Math.random());
+        while (Y * 11 + 1 < 11 || Y * 11 + 1 > 576) Y = min + Math.floor((max - min) * Math.random());
         return Y * 11 + 1;
     }
 
@@ -125,8 +138,8 @@
     var text = document.getElementById("score");
 
     function food() {
-        apple.style.left = a(-1000, 1000) + "px";
-        apple.style.top = b(-1000, 1000) + "px";
+        apple.style.left = a(0, 900) + "px";
+        apple.style.top = b(0, 900) + "px";
     }
 
     function new_one() {
@@ -135,7 +148,7 @@
             food();
             counter += 1;
         }
-        text.value = "your score is " + counter;
+        text.placeholder = "your score is " + counter;
     }
 
     function grow() {
