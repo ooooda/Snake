@@ -16,7 +16,7 @@
         #square {
             width: 10px;
             height: 10px;
-            background-color: #02b398;
+            background-color: #93063d;
             position: absolute;
             left: 1px;
             top: 1px;
@@ -60,15 +60,15 @@
     var x = 1, y = 1;
     var key = "ArrowRight";
     var snake = document.getElementById("square");
-
+    var finish = false;
     function reset() {
+        finish = false;
         counter = 0;
         x = 1;
         y = 1;
         key = "ArrowRight";
         food();
         fieldSNAKE.style.backgroundColor = "white";
-        snake.style.backgroundColor = "darkblue";
         apple.style.backgroundColor = "green";
         while (fieldSNAKE.children.length > 3) {
             fieldSNAKE.removeChild(fieldSNAKE.lastChild);
@@ -98,6 +98,7 @@
     }
 
     function game() {
+        if (finish) return;
         for (i = fieldSNAKE.children.length - 1; i >= 3; i -= 1) {
             fieldSNAKE.children[i].style.left = fieldSNAKE.children[i - 1].style.left;
             fieldSNAKE.children[i].style.top = fieldSNAKE.children[i - 1].style.top;
@@ -113,9 +114,9 @@
     var fieldSNAKE = document.getElementById("field");
 
     function gameover() {
+        finish = true;
         fieldSNAKE.style.backgroundColor = "black";
         apple.style.backgroundColor = "black";
-        key = "";
     }
 
     var X = 1;
